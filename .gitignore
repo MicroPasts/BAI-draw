@@ -12,3 +12,4 @@ _gcs_form.html
 .buildpath
 /nbproject/private/
 /nbproject/*
+*.idea
