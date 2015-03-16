@@ -19,7 +19,6 @@
 import json
 from optparse import OptionParser
 import pbclient
-from get_images import get_flickr_set_photos
 import random
 import logging
 import time
@@ -42,16 +41,13 @@ def handle_arguments():
     parser.add_option("-k", "--api-key", dest="api_key",
                       help="PyBossa User API-KEY to interact with PyBossa",
                       metavar="API-KEY")
-    # Flickr Photoset ID
-    parser.add_option("-i", "--id", dest="photoset_id",
-                      help="Flickr Photoset ID to import",
-                      metavar="PHOTOSET-ID")
 
     # Create App
     parser.add_option("-c", "--create-app", action="store_true",
                       dest="create_app",
                       help="Create the application",
                       metavar="CREATE-APP")
+
     # Update template for tasks and long_description for app
     parser.add_option("-t", "--update-template", action="store_true",
                       dest="update_template",
@@ -64,11 +60,6 @@ def handle_arguments():
                       dest="update_tasks",
                       help="Update Tasks n_answers",
                       metavar="UPDATE-TASKS")
-
-    parser.add_option("-x", "--extra-task", action="store_true",
-                      dest="add_more_tasks",
-                      help="Add more tasks",
-                      metavar="ADD-MORE-TASKS")
 
     # Modify the number of TaskRuns per Task
     # (default 2)
@@ -90,7 +81,7 @@ def handle_arguments():
     (options, args) = parser.parse_args()
 
     if not options.create_app and not options.update_template\
-            and not options.add_more_tasks and not options.update_tasks:
+            and not options.update_tasks:
         parser.error("Please check --help or -h for the available options")
 
     if not options.api_key:
@@ -146,39 +137,12 @@ def run(app_config, options):
         app.info['task_presenter'] = contents('template.html')
         app.info['thumbnail'] = app_config['thumbnail']
         app.info['tutorial'] = contents('tutorial.html')
-
         try:
             response = pbclient.update_app(app)
             check_api_error(response)
             return app
         except:
             format_error("pbclient.update_app", response)
-
-    def create_photo_task(app, photo, question, priority=0):
-        # Data for the tasks
-        task_info = photo
-        try:
-            response = pbclient.create_task(app.id, task_info, priority_0=priority)
-            check_api_error(response)
-        except:
-            format_error("pbclient.create_task", response)
-
-    def add_photo_tasks(app):
-        # First of all we get the URL photos
-        # Then, we have to create a set of tasks for the application
-        # For this, we get first the photo URLs from Flickr
-        photos = get_flickr_set_photos(options.photoset_id)
-        question = app_config['question']
-        #[create_photo_task(app, p, question, priority=random.random()) for p in photos]
-        # Estimate how many minutes it has to wait before reaching the limit
-        # Limit is 300 tasks per 15 minutes
-        wait = (15 * 60) / 300
-        if len(photos) > 300:
-            wait = wait + 1 # Adding one second will take 20 minutes to add 300 tasks
-        print "Wait %s seconds between each create_task request" % wait
-        for p in photos:
-            create_photo_task(app, p, question, priority=0)
-            time.sleep(wait)
 
     pbclient.set('api_key', options.api_key)
     pbclient.set('endpoint', options.api_url)
