@@ -4,7 +4,6 @@ Bronze Age Index app for PyBossa
 This application has four files:
 
 *  createTasks.py: for creating the application in PyBossa, and fill it with some tasks.
-*  config.py.template: for configuring the Flickr API KEY (required!)
 *  template.html: the view for every task and deal with the data of the answers.
 *  tutorial.html: a simple tutorial for the volunteers.
 
