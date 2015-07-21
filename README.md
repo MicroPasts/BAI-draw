@@ -1,12 +1,12 @@
-Bronze Age Index app for PyBossa
-================================
+Bronze Age Index transcription code  for PyBossa
+================================================
 
 This application has four files:
 
 *  project.json: the descriptive metadata for the project
 *  template.html: the view for every task and deal with the data of the answers.
 *  tutorial.html: a simple tutorial for the volunteers.
-*  long_description.md
+*  long_description.md: The descriptive file for the project
 
 If you see a line beginning with a $ symbol, this means enter the text after the symbol into your terminal window.
 
@@ -34,6 +34,7 @@ You need to use the PBS command line interface for creating and updating the pro
    $ pbs create_project
 ```
 *  This should have created the project.
+*  If the long description has not appeared, then run the update project command as shown below
 
 Documentation
 =============
@@ -53,6 +54,7 @@ After making changes to your source code and committing to github do the followi
 ```
 
 *  Template should update
+
 
 Adding tasks to project
 =======================
